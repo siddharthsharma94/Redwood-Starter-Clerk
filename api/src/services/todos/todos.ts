@@ -7,7 +7,7 @@ export const todos: QueryResolvers['todos'] = () => {
 }
 
 export const todo: QueryResolvers['todo'] = ({ id }) => {
-  return db.todo.findUnique({
+  return db.todo.findFirst({
     where: { id, userId: context.currentUser.id },
   })
 }
@@ -21,12 +21,12 @@ export const createTodo: MutationResolvers['createTodo'] = ({ input }) => {
 export const updateTodo: MutationResolvers['updateTodo'] = ({ id, input }) => {
   return db.todo.update({
     data: input,
-    where: { id, userId: context.currentUser.id },
+    where: { id },
   })
 }
 
 export const deleteTodo: MutationResolvers['deleteTodo'] = ({ id }) => {
   return db.todo.delete({
-    where: { id, userId: context.currentUser.id },
+    where: { id },
   })
 }

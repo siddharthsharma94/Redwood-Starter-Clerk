@@ -23,5 +23,10 @@ export const Failure = ({ error }: CellFailureProps) => (
 )
 
 export const Success = ({ todo }: CellSuccessProps<FindTodoById>) => {
-  return <Todo todo={todo} />
+  return (
+    <div>
+      <p className="text-blue-500 font-bold"> Hello!</p>
+      <Todo todo={todo} />
+    </div>
+  )
 }
