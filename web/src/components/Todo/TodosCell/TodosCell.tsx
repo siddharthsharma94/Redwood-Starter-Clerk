@@ -4,6 +4,7 @@ import { Link, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import Todos from 'src/components/Todo/Todos'
+import { SignInButton, useAuth, UserButton } from '@clerk/clerk-react'
 
 export const QUERY = gql`
   query FindTodos {
@@ -15,16 +16,29 @@ export const QUERY = gql`
   }
 `
 
+const UserInfo = () => {
+  const { isSignedIn, sessionId, userId } = useAuth()
+  return (
+    <>
+      {isSignedIn ? (
+        <UserButton afterSignOutUrl={window.location.href} />
+      ) : (
+        <SignInButton mode="modal" redirectUrl={window.location.pathname}>
+          <button>Log in</button>
+        </SignInButton>
+      )}
+    </>
+  )
+}
+
 export const Loading = () => <div>Loading...</div>
 
 export const Empty = () => {
   return (
     <div className="rw-text-center">
+      <UserInfo />
       {'No todos yet. '}
-      <Link
-        to={routes.newTodo()}
-        className="rw-link"
-      >
+      <Link to={routes.newTodo()} className="rw-link">
         {'Create one?'}
       </Link>
     </div>
@@ -32,9 +46,19 @@ export const Empty = () => {
 }
 
 export const Failure = ({ error }: CellFailureProps) => (
-  <div className="rw-cell-error">{error.message}</div>
+  <>
+    <UserInfo />
+    <div className="rw-cell-error">{error.message}</div>
+  </>
 )
 
 export const Success = ({ todos }: CellSuccessProps<FindTodos>) => {
-  return <Todos todos={todos} />
+  const { isSignedIn, sessionId, userId } = useAuth()
+
+  return (
+    <>
+      <UserInfo />
+      <Todos todos={todos} />
+    </>
+  )
 }
