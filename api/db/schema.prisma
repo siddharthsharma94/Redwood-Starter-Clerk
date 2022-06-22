@@ -1,0 +1,35 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = "native"
+}
+
+generator docs {
+  provider = "node node_modules/prisma-docs-generator"
+}
+
+// Define your own datamodels here and run `yarn redwood prisma migrate dev`
+// to create migrations for them and apply to your dev DB.
+// TODO: Please remove the following example:
+model Todo {
+  id     Int      @id @default(autoincrement())
+  name   String?
+  date   DateTime
+  User   User?    @relation(fields: [userId], references: [id])
+  userId String?
+}
+
+model User {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phoneNumber String?
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  todos       Todo[]
+}
