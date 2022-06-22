@@ -24,8 +24,7 @@ model Todo {
   name   String?
   date   DateTime
   User   User     @relation(fields: [userId], references: [id])
-  userId String   @unique
-
+  userId String
 }
 
 model User {
